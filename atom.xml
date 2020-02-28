@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://xky5308222.github.io</id>
     <title>XKY&apos;s Home</title>
-    <updated>2020-02-26T04:12:36.672Z</updated>
+    <updated>2020-02-28T01:51:58.525Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://xky5308222.github.io"/>
     <link rel="self" href="https://xky5308222.github.io/atom.xml"/>
@@ -11,6 +11,281 @@
     <logo>https://xky5308222.github.io/images/avatar.png</logo>
     <icon>https://xky5308222.github.io/favicon.ico</icon>
     <rights>All rights reserved 2020, XKY&apos;s Home</rights>
+    <entry>
+        <title type="html"><![CDATA[Solution [LuoguP1141] 01迷宫]]></title>
+        <id>https://xky5308222.github.io/post/solution-luogup1141-01-mi-gong/</id>
+        <link href="https://xky5308222.github.io/post/solution-luogup1141-01-mi-gong/">
+        </link>
+        <updated>2020-02-28T01:50:36.000Z</updated>
+        <content type="html"><![CDATA[<h3 id="其实这道题目的思想就是bfs有些困难的是数据太大不能裸搜">其实这道题目的思想就是bfs，有些困难的是数据太大，不能裸搜</h3>
+<h3 id="因为当x1y1和x2y2是连通的时候它们的答案必定相等">因为当（x1,y1）和（x2,y2）是连通的时候，它们的答案必定相等</h3>
+<h3 id="所以我们就将搜到的点的答案都记录下来到时候直接拿出来用就可以了">所以我们就将搜到的点的答案都记录下来，到时候直接拿出来用就可以了！</h3>
+<p>代码（pascal）</p>
+<pre><code class="language-pascal">const dx:array[1..4] of longint=(0,1,0,-1);
+      dy:array[1..4] of longint=(1,0,-1,0);
+var n,m,xx,yy,i,j:longint;
+    ans,a:array[0..1001,0..1001] of longint;
+    f:array[0..1001,0..1001] of boolean;
+    b:array[0..1000001] of record x,y:longint; end;
+    k:char;
+
+procedure bfs(x1,y1:longint);
+  var h,t,i,t1,t2:longint;
+  begin
+    h:=0;t:=1;
+    b[1].x:=x1;
+    b[1].y:=y1;//本人的程序刚开始前面加了fillchar就TLE……
+    f[x1][y1]:=true;
+    while(h&lt;t)do
+    begin
+      inc(h);
+      for i:=1 to 4 do
+      begin
+        t1:=b[h].x+dx[i];
+        t2:=b[h].y+dy[i];
+        if (t1&lt;1) or (t1&gt;n) or (t2&lt;1) or (t2&gt;n) then continue;
+        if (not f[t1][t2]) and (1-a[b[h].x][b[h].y]=a[t1][t2]) then
+        begin
+          inc(t);
+          b[t].x:=t1;
+          b[t].y:=t2;
+          f[t1][t2]:=true;
+        end;
+      end;
+    end;
+    for i:=1 to t do ans[b[i].x][b[i].y]:=t;//将已经走过的点的答案保存下来
+  end;
+
+begin
+  readln(n,m);
+  for i:=1 to n do
+  begin
+    for j:=1 to n do
+    begin
+      read(k);
+      a[i][j]:=ord(k)-48;
+    end;
+    readln;
+  end;
+  fillchar(ans,sizeof(ans),255);
+  for i:=1 to n do//先全部扫一遍
+    for j:=1 to n do
+      if not f[i][j] then bfs(i,j);
+  for i:=1 to m do
+  begin
+    readln(xx,yy);
+    writeln(ans[xx][yy]);
+  end;
+end.
+</code></pre>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Solution [LuoguP1736] 创意吃鱼法]]></title>
+        <id>https://xky5308222.github.io/post/solution-luogup1736-chuang-yi-chi-yu-fa/</id>
+        <link href="https://xky5308222.github.io/post/solution-luogup1736-chuang-yi-chi-yu-fa/">
+        </link>
+        <updated>2020-02-28T01:47:05.000Z</updated>
+        <content type="html"><![CDATA[<h4 id="本蒟蒻第一次ac此难度的题"><s>本蒟蒻第一次AC此难度的题……</s></h4>
+<p>给大家介绍的算法<s>相对前排大佬</s>，明显低效的多，时间复杂度O（n^2logn）有兴趣的OIER们可以看看，不喜勿喷！</p>
+<h2 id="主要思路dp二分">主要思路：dp+二分</h2>
+<h4 id="dp的基本思路还是比较简单的">dp的基本思路还是比较简单的：</h4>
+<p>f[i][j]表示以i,j为右下角最多吃到的鱼</p>
+<p>f1[i][j]表示以i,j为左下角最多吃到的鱼</p>
+<p><s>那么显然：</s></p>
+<pre><code class="language-cpp">f[i][j]=f[i-1][j-1]+1;
+f1[i][j]=f1[i-1][j+1]+1;
+</code></pre>
+<h3 id="但是">但是！</h3>
+<ul>
+<li>如果某个正方形子矩阵的某条对角线上都有鱼，<strong>且此正方形子矩阵的其他地方无鱼</strong>，猫猫就可以从这个正方形子矩阵“对角线的一端”下口！</li>
+</ul>
+<p>这该怎么判断呢？？！</p>
+<p>本人第一时间，想到了二维前缀和：</p>
+<pre><code class="language-cpp">s[i][j]=s[i][j-1]+s[i-1][j]-s[i-1][j-1]+a[i][j];
+</code></pre>
+<p>那么，只要我们在转移之前，判断：<strong>如果该矩阵的所有数的和等于这条对角线的长度，就转移；否则，赋值为1。</strong></p>
+<p>本蒟<s>非常happy，信心十足地</s>上交了，80……</p>
+<p>不断调试中，发现了问题！<br>
+例如这个矩阵：</p>
+<p>1 0 1</p>
+<p>0 1 0</p>
+<p>1 0 0</p>
+<p>我们做的时候，显然dp[1][1]=1;dp[1][3]=1;dp[2][2]=2;</p>
+<p>但是当dp[3][1]转移的时候，因为dp[2][2]+1,即边长为3的矩阵里有其他的1，所以将不会更新，默认为1!</p>
+<h3 id="所以开始二分">所以！开始二分！</h3>
+<p>我们二分正方形矩阵的大小，判断是否符合要求，符合就记录下来，不断更新，找到符合要求的最大矩阵。</p>
+<p>思路就是这样，代码（c++）</p>
+<pre><code class="language-cpp">#include &lt;bits/stdc++.h&gt;
+using namespace std;
+
+int a[2510][2510],f[2510][2510],f1[2510][2510],s[2510][2510];
+
+int check(int x,int y,int xx,int yy,int f){
+	int l=x,r=y,ans=0;
+	while(l&lt;=r){
+		int mid=(l+r)/2;
+		int i=xx,j=yy;
+		if (f==1) j+=mid-1;//如果是左下角判断，强制更改为右下角，计算方便
+		int sum=s[i][j]-s[i-mid][j]-s[i][j-mid]+s[i-mid][j-mid];
+		if (sum==mid){
+			l=mid+1;
+			ans=mid;
+		}
+		else r=mid-1;//二分判断
+	}
+	return ans;
+}
+
+int main()
+{
+//	freopen(&quot;fish.in&quot;,&quot;r&quot;,stdin);
+//	freopen(&quot;fish.out&quot;,&quot;w&quot;,stdout);
+	int n,m;
+	scanf(&quot;%d%d&quot;,&amp;n,&amp;m);
+	for(int i=1;i&lt;=n;i++)
+	    for(int j=1;j&lt;=m;j++){
+    	    scanf(&quot;%d&quot;,&amp;a[i][j]);
+    	    s[i][j]=s[i-1][j]+s[i][j-1]-s[i-1][j-1]+a[i][j];//前缀和，之前已经介绍过了
+		}
+    for(int i=1;i&lt;=n;i++)
+        for(int j=1;j&lt;=m;j++)
+ 		    if (a[i][j]==1){
+ 		    	f[i][j]=1;
+		        f1[i][j]=1;
+ 		    	if (a[i-1][j-1]==1) {//右下角判断
+ 		    		int tt=f[i-1][j-1]+1;
+					int t=check(1,tt,i,j,0);
+ 		    		f[i][j]=max(f[i][j],t);
+				 }
+ 		    	if (a[i-1][j+1]==1) {//左下角判断
+ 		    		int tt=f1[i-1][j+1]+1;
+ 		    		int t=check(1,tt,i,j,1);
+ 		    		f1[i][j]=max(f1[i][j],t);
+				 } 
+			 }
+    int ans=0;
+    for(int i=1;i&lt;=n;i++)
+        for(int j=1;j&lt;=m;j++)
+            ans=max(ans,max(f[i][j],f1[i][j]));
+    printf(&quot;%d\n&quot;,ans);
+	return 0;
+}
+</code></pre>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Solution [LuoguP5018] 对称二叉树]]></title>
+        <id>https://xky5308222.github.io/post/solution-luogup5018-dui-cheng-er-cha-shu/</id>
+        <link href="https://xky5308222.github.io/post/solution-luogup5018-dui-cheng-er-cha-shu/">
+        </link>
+        <updated>2020-02-28T01:42:43.000Z</updated>
+        <content type="html"><![CDATA[<p>考场上被T3dp虐成狗，看到T4的对称什么奇奇怪怪的玩意瞬间心都在飞扬……</p>
+<p>结果打了个错的大暴力只过了1个点我谔谔……</p>
+<p>看到某几位直接输出3就得了32分的神仙我默默流泪……</p>
+<h2 id="进入正题">进入正题</h2>
+<p>古人说马上、厕上、枕上容易出灵感</p>
+<p>回到家经过一番冷静，本蒟蒻<s>看似貌不经心地上个厕所</s>却神奇地有了一些思路</p>
+<h3 id="关键如何判断一棵树为对称二叉树">关键：如何判断一棵树为对称二叉树？</h3>
+<p>我们采用递归的方法：<br>
+如果一棵树的左子树的左子树和它的右子树的右子树“对称”，并且它的左子树的右子树和它的右子树的左子树“对称”，就符合判断的条件。（逃~）</p>
+<h3 id="用正常的话来说就是">用正常的话来说就是：</h3>
+<pre><code class="language-pascal">function check(x,y:longint):boolean;
+  begin
+    if (x=-1) and (y=-1) then exit(true);//两个空节点
+    if v[x]&lt;&gt;v[y] then exit(false)
+    else
+    begin
+      if (l[x]=-1) and (r[x]=-1) and (l[y]=-1) and (r[y]=-1) then
+        exit(true);//两个子节点
+      if check(l[x],r[y]) and check(r[x],l[y]) then exit(true);
+      exit(false);
+    end;
+  end;
+</code></pre>
+<p>同时，我们先预处理好找到这棵树的根节点，并且在搜索上我采用bfs的方式。当一个节点被搜索完了以后，就将它的非空子节点放入队列中。</p>
+<p>就这样，我们就已经写出了一个看似是暴力的正解</p>
+<p>至于复杂度吗，本人经过<s>1000000000 % 10</s>min的计算也没有得出结果，还清大佬在评论区留言（<s>暂且认为是个玄学复杂度</s>）。</p>
+<h2 id="code">Code</h2>
+<pre><code class="language-pascal">var v,l,r,s,a:array[-1..1000001] of longint;
+    find,n,i,max:longint;
+
+function p:longint;//没有爸爸的就是老祖宗丫丫
+  var i:longint;
+  begin
+    for i:=1 to n do if s[i]=0 then exit(i);
+  end;
+
+function check(x,y:longint):boolean;
+  begin
+    if (x=-1) and (y=-1) then exit(true);
+    if v[x]&lt;&gt;v[y] then exit(false)
+    else
+    begin
+      if (l[x]=-1) and (r[x]=-1) and (l[y]=-1) and (r[y]=-1) then
+        exit(true);
+      if check(l[x],r[y]) and check(r[x],l[y]) then exit(true);
+      exit(false);
+    end;
+  end;
+
+function sc(t:longint):longint;
+  var ss:longint;
+  begin
+    if (l[t]=-1) and (r[t]=-1) then exit(1)
+    else
+    begin
+      ss:=1;
+      if (l[t]&lt;&gt;-1) then ss:=ss+sc(l[t]);
+      if (r[t]&lt;&gt;-1) then ss:=ss+sc(r[t]);
+      exit(ss);
+    end;
+  end;//相当好理解的统计节点个数
+
+procedure bfs(k:longint);
+  var h,t,sk:longint;
+  begin
+    h:=0;
+    t:=1;
+    a[t]:=k;
+    while(h&lt;t)do//标准bfs模板
+    begin
+      inc(h);
+      if check(l[a[h]],r[a[h]]) then
+      begin
+        sk:=sc(a[h]);
+        if max&lt;sk then max:=sk; 
+      end;
+      if l[a[h]]&lt;&gt;-1 then
+      begin
+        inc(t);
+        a[t]:=l[a[h]];
+      end;
+      if r[a[h]]&lt;&gt;-1 then
+      begin
+        inc(t);
+        a[t]:=r[a[h]];
+      end;
+    end;
+  end;
+
+begin
+  readln(n);
+  for i:=1 to n do read(v[i]);
+  for i:=1 to n do
+  begin
+    readln(l[i],r[i]);
+    s[l[i]]:=i;
+    s[r[i]]:=i;//找爸爸
+  end;
+  find:=p;
+  bfs(find);
+  writeln(max);
+end.
+</code></pre>
+<h3 id="个人认为这道题还是不算难的t4考察的并不是算法的掌握主要是思维方式">个人认为这道题还是不算难的T4，考察的并不是算法的掌握，主要是思维方式。</h3>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[Hello Gridea]]></title>
         <id>https://xky5308222.github.io/post/hello-gridea/</id>

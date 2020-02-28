@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" >
 
-<title>Hello Gridea | XKY&#39;s Home</title>
+<title>Solution [LuoguP1141] 01迷宫 | XKY&#39;s Home</title>
 
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
@@ -24,15 +24,12 @@
 
 
 
-    <meta name="description" content="👏  欢迎使用 Gridea ！
-✍️  Gridea 一个静态博客写作客户端。你可以用它来记录你的生活、心情、知识、笔记、创意... ...
-
-Github
-Gridea 主页
-示例网站
-特性👇
-📝  你可以使用最酷的 Markdo..." />
-    <meta name="keywords" content="Gridea" />
+    <meta name="description" content="其实这道题目的思想就是bfs，有些困难的是数据太大，不能裸搜
+因为当（x1,y1）和（x2,y2）是连通的时候，它们的答案必定相等
+所以我们就将搜到的点的答案都记录下来，到时候直接拿出来用就可以了！
+代码（pascal）
+const dx:..." />
+    <meta name="keywords" content="Solution" />
   </head>
   <body>
     <div id="app" class="main">
@@ -104,45 +101,91 @@ Gridea 主页
       <div class="main-container">
         <div class="content-container" data-aos="fade-up">
           <div class="post-detail">
-            <h2 class="post-title">Hello Gridea</h2>
-            <div class="post-date">2018-12-12</div>
-            
-              <div class="feature-container" style="background-image: url('https://xky5308222.github.io/post-images/hello-gridea.png')">
-              </div>
+            <h2 class="post-title">Solution [LuoguP1141] 01迷宫</h2>
+            <div class="post-date">2020-02-28</div>
             
             <div class="post-content" v-pre>
-              <p>👏  欢迎使用 <strong>Gridea</strong> ！<br>
-✍️  <strong>Gridea</strong> 一个静态博客写作客户端。你可以用它来记录你的生活、心情、知识、笔记、创意... ...</p>
-<!-- more -->
-<p><a href="https://github.com/getgridea/gridea">Github</a><br>
-<a href="https://gridea.dev/">Gridea 主页</a><br>
-<a href="http://fehey.com/">示例网站</a></p>
-<h2 id="特性">特性👇</h2>
-<p>📝  你可以使用最酷的 <strong>Markdown</strong> 语法，进行快速创作</p>
-<p>🌉  你可以给文章配上精美的封面图和在文章任意位置插入图片</p>
-<p>🏷️  你可以对文章进行标签分组</p>
-<p>📋  你可以自定义菜单，甚至可以创建外部链接菜单</p>
-<p>💻  你可以在 <strong>Windows</strong>，<strong>MacOS</strong> 或 <strong>Linux</strong> 设备上使用此客户端</p>
-<p>🌎  你可以使用 <strong>𝖦𝗂𝗍𝗁𝗎𝖻 𝖯𝖺𝗀𝖾𝗌</strong> 或 <strong>Coding Pages</strong> 向世界展示，未来将支持更多平台</p>
-<p>💬  你可以进行简单的配置，接入 <a href="https://github.com/gitalk/gitalk">Gitalk</a> 或 <a href="https://github.com/SukkaW/DisqusJS">DisqusJS</a> 评论系统</p>
-<p>🇬🇧  你可以使用<strong>中文简体</strong>或<strong>英语</strong></p>
-<p>🌁  你可以任意使用应用内默认主题或任意第三方主题，强大的主题自定义能力</p>
-<p>🖥  你可以自定义源文件夹，利用 OneDrive、百度网盘、iCloud、Dropbox 等进行多设备同步</p>
-<p>🌱 当然 <strong>Gridea</strong> 还很年轻，有很多不足，但请相信，它会不停向前 🏃</p>
-<p>未来，它一定会成为你离不开的伙伴</p>
-<p>尽情发挥你的才华吧！</p>
-<p>😘 Enjoy~</p>
+              <h3 id="其实这道题目的思想就是bfs有些困难的是数据太大不能裸搜">其实这道题目的思想就是bfs，有些困难的是数据太大，不能裸搜</h3>
+<h3 id="因为当x1y1和x2y2是连通的时候它们的答案必定相等">因为当（x1,y1）和（x2,y2）是连通的时候，它们的答案必定相等</h3>
+<h3 id="所以我们就将搜到的点的答案都记录下来到时候直接拿出来用就可以了">所以我们就将搜到的点的答案都记录下来，到时候直接拿出来用就可以了！</h3>
+<p>代码（pascal）</p>
+<pre><code class="language-pascal">const dx:array[1..4] of longint=(0,1,0,-1);
+      dy:array[1..4] of longint=(1,0,-1,0);
+var n,m,xx,yy,i,j:longint;
+    ans,a:array[0..1001,0..1001] of longint;
+    f:array[0..1001,0..1001] of boolean;
+    b:array[0..1000001] of record x,y:longint; end;
+    k:char;
+
+procedure bfs(x1,y1:longint);
+  var h,t,i,t1,t2:longint;
+  begin
+    h:=0;t:=1;
+    b[1].x:=x1;
+    b[1].y:=y1;//本人的程序刚开始前面加了fillchar就TLE……
+    f[x1][y1]:=true;
+    while(h&lt;t)do
+    begin
+      inc(h);
+      for i:=1 to 4 do
+      begin
+        t1:=b[h].x+dx[i];
+        t2:=b[h].y+dy[i];
+        if (t1&lt;1) or (t1&gt;n) or (t2&lt;1) or (t2&gt;n) then continue;
+        if (not f[t1][t2]) and (1-a[b[h].x][b[h].y]=a[t1][t2]) then
+        begin
+          inc(t);
+          b[t].x:=t1;
+          b[t].y:=t2;
+          f[t1][t2]:=true;
+        end;
+      end;
+    end;
+    for i:=1 to t do ans[b[i].x][b[i].y]:=t;//将已经走过的点的答案保存下来
+  end;
+
+begin
+  readln(n,m);
+  for i:=1 to n do
+  begin
+    for j:=1 to n do
+    begin
+      read(k);
+      a[i][j]:=ord(k)-48;
+    end;
+    readln;
+  end;
+  fillchar(ans,sizeof(ans),255);
+  for i:=1 to n do//先全部扫一遍
+    for j:=1 to n do
+      if not f[i][j] then bfs(i,j);
+  for i:=1 to m do
+  begin
+    readln(xx,yy);
+    writeln(ans[xx][yy]);
+  end;
+end.
+</code></pre>
 
             </div>
             
               <div class="tag-container">
                 
-                  <a href="https://xky5308222.github.io/tag/XwP2mD40S/" class="tag">
-                    Gridea
+                  <a href="https://xky5308222.github.io/tag/UBToCCNPV/" class="tag">
+                    Solution
                   </a>
                 
               </div>
             
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://xky5308222.github.io/post/solution-luogup1736-chuang-yi-chi-yu-fa/">
+                  <h3 class="post-title">
+                    Solution [LuoguP1736] 创意吃鱼法
+                  </h3>
+                </a>
+              </div>
             
 
             

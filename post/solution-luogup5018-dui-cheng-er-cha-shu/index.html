@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>Solution [LuoguP5018] 对称二叉树 | XKY&#39;s Home</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://xky5308222.github.io/favicon.ico?v=1582854708647">
+<link rel="stylesheet" href="https://xky5308222.github.io/styles/main.css">
+
+
+  
+    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css" />
+  
+
+  
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+
+    <meta name="description" content="考场上被T3dp虐成狗，看到T4的对称什么奇奇怪怪的玩意瞬间心都在飞扬……
+结果打了个错的大暴力只过了1个点我谔谔……
+看到某几位直接输出3就得了32分的神仙我默默流泪……
+进入正题
+古人说马上、厕上、枕上容易出灵感
+回到家经过一番冷静，本..." />
+    <meta name="keywords" content="Solution" />
+  </head>
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://xky5308222.github.io">
+        <img src="https://xky5308222.github.io/images/avatar.png?v=1582854708647" class="site-logo">
+        <h1 class="site-title">XKY&#39;s Home</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+    <div class="site-description">
+      不负韶华
+       我们都是追梦人
+    </div>
+    <div class="site-footer">
+      Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://xky5308222.github.io/atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">Solution [LuoguP5018] 对称二叉树</h2>
+            <div class="post-date">2020-02-28</div>
+            
+            <div class="post-content" v-pre>
+              <p>考场上被T3dp虐成狗，看到T4的对称什么奇奇怪怪的玩意瞬间心都在飞扬……</p>
+<p>结果打了个错的大暴力只过了1个点我谔谔……</p>
+<p>看到某几位直接输出3就得了32分的神仙我默默流泪……</p>
+<h2 id="进入正题">进入正题</h2>
+<p>古人说马上、厕上、枕上容易出灵感</p>
+<p>回到家经过一番冷静，本蒟蒻<s>看似貌不经心地上个厕所</s>却神奇地有了一些思路</p>
+<h3 id="关键如何判断一棵树为对称二叉树">关键：如何判断一棵树为对称二叉树？</h3>
+<p>我们采用递归的方法：<br>
+如果一棵树的左子树的左子树和它的右子树的右子树“对称”，并且它的左子树的右子树和它的右子树的左子树“对称”，就符合判断的条件。（逃~）</p>
+<h3 id="用正常的话来说就是">用正常的话来说就是：</h3>
+<pre><code class="language-pascal">function check(x,y:longint):boolean;
+  begin
+    if (x=-1) and (y=-1) then exit(true);//两个空节点
+    if v[x]&lt;&gt;v[y] then exit(false)
+    else
+    begin
+      if (l[x]=-1) and (r[x]=-1) and (l[y]=-1) and (r[y]=-1) then
+        exit(true);//两个子节点
+      if check(l[x],r[y]) and check(r[x],l[y]) then exit(true);
+      exit(false);
+    end;
+  end;
+</code></pre>
+<p>同时，我们先预处理好找到这棵树的根节点，并且在搜索上我采用bfs的方式。当一个节点被搜索完了以后，就将它的非空子节点放入队列中。</p>
+<p>就这样，我们就已经写出了一个看似是暴力的正解</p>
+<p>至于复杂度吗，本人经过<s>1000000000 % 10</s>min的计算也没有得出结果，还清大佬在评论区留言（<s>暂且认为是个玄学复杂度</s>）。</p>
+<h2 id="code">Code</h2>
+<pre><code class="language-pascal">var v,l,r,s,a:array[-1..1000001] of longint;
+    find,n,i,max:longint;
+
+function p:longint;//没有爸爸的就是老祖宗丫丫
+  var i:longint;
+  begin
+    for i:=1 to n do if s[i]=0 then exit(i);
+  end;
+
+function check(x,y:longint):boolean;
+  begin
+    if (x=-1) and (y=-1) then exit(true);
+    if v[x]&lt;&gt;v[y] then exit(false)
+    else
+    begin
+      if (l[x]=-1) and (r[x]=-1) and (l[y]=-1) and (r[y]=-1) then
+        exit(true);
+      if check(l[x],r[y]) and check(r[x],l[y]) then exit(true);
+      exit(false);
+    end;
+  end;
+
+function sc(t:longint):longint;
+  var ss:longint;
+  begin
+    if (l[t]=-1) and (r[t]=-1) then exit(1)
+    else
+    begin
+      ss:=1;
+      if (l[t]&lt;&gt;-1) then ss:=ss+sc(l[t]);
+      if (r[t]&lt;&gt;-1) then ss:=ss+sc(r[t]);
+      exit(ss);
+    end;
+  end;//相当好理解的统计节点个数
+
+procedure bfs(k:longint);
+  var h,t,sk:longint;
+  begin
+    h:=0;
+    t:=1;
+    a[t]:=k;
+    while(h&lt;t)do//标准bfs模板
+    begin
+      inc(h);
+      if check(l[a[h]],r[a[h]]) then
+      begin
+        sk:=sc(a[h]);
+        if max&lt;sk then max:=sk; 
+      end;
+      if l[a[h]]&lt;&gt;-1 then
+      begin
+        inc(t);
+        a[t]:=l[a[h]];
+      end;
+      if r[a[h]]&lt;&gt;-1 then
+      begin
+        inc(t);
+        a[t]:=r[a[h]];
+      end;
+    end;
+  end;
+
+begin
+  readln(n);
+  for i:=1 to n do read(v[i]);
+  for i:=1 to n do
+  begin
+    readln(l[i],r[i]);
+    s[l[i]]:=i;
+    s[r[i]]:=i;//找爸爸
+  end;
+  find:=p;
+  bfs(find);
+  writeln(max);
+end.
+</code></pre>
+<h3 id="个人认为这道题还是不算难的t4考察的并不是算法的掌握主要是思维方式">个人认为这道题还是不算难的T4，考察的并不是算法的掌握，主要是思维方式。</h3>
+
+            </div>
+            
+              <div class="tag-container">
+                
+                  <a href="https://xky5308222.github.io/tag/UBToCCNPV/" class="tag">
+                    Solution
+                  </a>
+                
+              </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://xky5308222.github.io/post/hello-gridea/">
+                  <h3 class="post-title">
+                    Hello Gridea
+                  </h3>
+                </a>
+              </div>
+            
+
+            
+              
+                <div id="gitalk-container" data-aos="fade-in"></div>
+              
+
+              
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+
+  
+    <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+    <script>
+
+      var gitalk = new Gitalk({
+        clientID: 'xky5308222',
+        clientSecret: 'xukaiyang5308',
+        repo: 'xky5308222.github.io',
+        owner: 'xky5308222',
+        admin: ['xky5308222'],
+        id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+        distractionFreeMode: false  // Facebook-like distraction free mode
+      })
+
+      gitalk.render('gitalk-container')
+
+    </script>
+  
+
+  
+
+
+
+
+  </body>
+</html>
