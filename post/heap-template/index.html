@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" >
 
-<title>Solution [LuoguP1141] 01迷宫 | XKY&#39;s Home</title>
+<title>Heap Template | XKY&#39;s Home</title>
 
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
@@ -24,12 +24,11 @@
 
 
 
-    <meta name="description" content="其实这道题目的思想就是bfs，有些困难的是数据太大，不能裸搜
-因为当（x1,y1）和（x2,y2）是连通的时候，它们的答案必定相等
-所以我们就将搜到的点的答案都记录下来，到时候直接拿出来用就可以了！
-代码（pascal）
-const dx:..." />
-    <meta name="keywords" content="Solution" />
+    <meta name="description" content="其实好像也没什么模版
+STL版
+priority_queue&lt;int,vector&lt;int&gt;,greater&lt;int&gt; &gt; q;//小根堆
+priority_queue&lt;int,vector&lt;..." />
+    <meta name="keywords" content="Template&Notes" />
   </head>
   <body>
     <div id="app" class="main">
@@ -101,78 +100,68 @@ const dx:..." />
       <div class="main-container">
         <div class="content-container" data-aos="fade-up">
           <div class="post-detail">
-            <h2 class="post-title">Solution [LuoguP1141] 01迷宫</h2>
+            <h2 class="post-title">Heap Template</h2>
             <div class="post-date">2020-02-28</div>
             
             <div class="post-content" v-pre>
-              <h3 id="其实这道题目的思想就是bfs有些困难的是数据太大不能裸搜">其实这道题目的思想就是bfs，有些困难的是数据太大，不能裸搜</h3>
-<h3 id="因为当x1y1和x2y2是连通的时候它们的答案必定相等">因为当（x1,y1）和（x2,y2）是连通的时候，它们的答案必定相等</h3>
-<h3 id="所以我们就将搜到的点的答案都记录下来到时候直接拿出来用就可以了">所以我们就将搜到的点的答案都记录下来，到时候直接拿出来用就可以了！</h3>
-<p>代码（pascal）</p>
-<pre><code class="language-pascal">const dx:array[1..4] of longint=(0,1,0,-1);
-      dy:array[1..4] of longint=(1,0,-1,0);
-var n,m,xx,yy,i,j:longint;
-    ans,a:array[0..1001,0..1001] of longint;
-    f:array[0..1001,0..1001] of boolean;
-    b:array[0..1000001] of record x,y:longint; end;
-    k:char;
+              <p><s>其实好像也没什么模版</s><br>
+STL版</p>
+<pre><code class="language-c++">priority_queue&lt;int,vector&lt;int&gt;,greater&lt;int&gt; &gt; q;//小根堆
+priority_queue&lt;int,vector&lt;int&gt; &gt; q;//大根堆
 
-procedure bfs(x1,y1:longint);
-  var h,t,i,t1,t2:longint;
+struct cmp{
+    bool operator()(const int a,const int b) const{
+        return a % 10&gt;b % 10;
+    }
+};
+
+priority_queue&lt; int , vector &lt; int &gt; , cmp &gt; Q;//自定义的堆
+</code></pre>
+<p>标准版（<s>实在不好意思再写c++，给P党放个福利</s>）</p>
+<pre><code class="language-pascal">procedure put(x:longint);//插入元素
+  var fa,son,tmp:longint;
   begin
-    h:=0;t:=1;
-    b[1].x:=x1;
-    b[1].y:=y1;//本人的程序刚开始前面加了fillchar就TLE……
-    f[x1][y1]:=true;
-    while(h&lt;t)do
+    len:=len+1;
+    heap[len]:=x;
+    son:=len;
+    while (son&lt;&gt;1) and (heap[son div 2]&gt;heap[son]) do
     begin
-      inc(h);
-      for i:=1 to 4 do
+      temp:=heap[son div 2];
+      heap[son div 2]:=heap[son];
+      heap[son]:=temp;
+      son:=son div 2;
+    end;
+  end;
+
+function get:longint;//取出堆顶
+  var pa,son,tmp:longint;
+  begin
+    get:=heap[1]; 
+    heap[1]:=heap[len]; 
+    len:=len-1;
+    pa:=1;
+    while pa*2&lt;=len do
+    begin
+      if (pa*2+1&gt;len) or (heap[pa*2]&lt;heap[pa*2+1]) then son:=pa*2
+      else son:=pa*2+1;
+      if heap[pa]&gt;heap[son]then
       begin
-        t1:=b[h].x+dx[i];
-        t2:=b[h].y+dy[i];
-        if (t1&lt;1) or (t1&gt;n) or (t2&lt;1) or (t2&gt;n) then continue;
-        if (not f[t1][t2]) and (1-a[b[h].x][b[h].y]=a[t1][t2]) then
-        begin
-          inc(t);
-          b[t].x:=t1;
-          b[t].y:=t2;
-          f[t1][t2]:=true;
-        end;
-      end;
+        tmp:=heap[pa]; 
+        heap[pa]:=heap[son];
+        heap[son]:=tmp;
+        pa:=son;
+      end
+      else break;
     end;
-    for i:=1 to t do ans[b[i].x][b[i].y]:=t;//将已经走过的点的答案保存下来
   end;
-
-begin
-  readln(n,m);
-  for i:=1 to n do
-  begin
-    for j:=1 to n do
-    begin
-      read(k);
-      a[i][j]:=ord(k)-48;
-    end;
-    readln;
-  end;
-  fillchar(ans,sizeof(ans),255);
-  for i:=1 to n do//先全部扫一遍
-    for j:=1 to n do
-      if not f[i][j] then bfs(i,j);
-  for i:=1 to m do
-  begin
-    readln(xx,yy);
-    writeln(ans[xx][yy]);
-  end;
-end.
 </code></pre>
 
             </div>
             
               <div class="tag-container">
                 
-                  <a href="https://xky5308222.github.io/tag/UBToCCNPV/" class="tag">
-                    Solution
+                  <a href="https://xky5308222.github.io/tag/SIRGW3cr9/" class="tag">
+                    Template&amp;Notes
                   </a>
                 
               </div>
@@ -180,9 +169,9 @@ end.
             
               <div class="next-post">
                 <div class="next">下一篇</div>
-                <a href="https://xky5308222.github.io/post/solution-luogup1736-chuang-yi-chi-yu-fa/">
+                <a href="https://xky5308222.github.io/post/lca-template/">
                   <h3 class="post-title">
-                    Solution [LuoguP1736] 创意吃鱼法
+                    LCA Template
                   </h3>
                 </a>
               </div>

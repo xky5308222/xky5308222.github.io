@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://xky5308222.github.io</id>
     <title>XKY&apos;s Home</title>
-    <updated>2020-02-28T05:57:11.975Z</updated>
+    <updated>2020-02-28T08:05:14.668Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://xky5308222.github.io"/>
     <link rel="self" href="https://xky5308222.github.io/atom.xml"/>
@@ -11,6 +11,65 @@
     <logo>https://xky5308222.github.io/images/avatar.png</logo>
     <icon>https://xky5308222.github.io/favicon.ico</icon>
     <rights>All rights reserved 2020, XKY&apos;s Home</rights>
+    <entry>
+        <title type="html"><![CDATA[Heap Template]]></title>
+        <id>https://xky5308222.github.io/post/heap-template/</id>
+        <link href="https://xky5308222.github.io/post/heap-template/">
+        </link>
+        <updated>2020-02-28T06:12:02.000Z</updated>
+        <content type="html"><![CDATA[<p><s>其实好像也没什么模版</s><br>
+STL版</p>
+<pre><code class="language-c++">priority_queue&lt;int,vector&lt;int&gt;,greater&lt;int&gt; &gt; q;//小根堆
+priority_queue&lt;int,vector&lt;int&gt; &gt; q;//大根堆
+
+struct cmp{
+    bool operator()(const int a,const int b) const{
+        return a % 10&gt;b % 10;
+    }
+};
+
+priority_queue&lt; int , vector &lt; int &gt; , cmp &gt; Q;//自定义的堆
+</code></pre>
+<p>标准版（<s>实在不好意思再写c++，给P党放个福利</s>）</p>
+<pre><code class="language-pascal">procedure put(x:longint);//插入元素
+  var fa,son,tmp:longint;
+  begin
+    len:=len+1;
+    heap[len]:=x;
+    son:=len;
+    while (son&lt;&gt;1) and (heap[son div 2]&gt;heap[son]) do
+    begin
+      temp:=heap[son div 2];
+      heap[son div 2]:=heap[son];
+      heap[son]:=temp;
+      son:=son div 2;
+    end;
+  end;
+
+function get:longint;//取出堆顶
+  var pa,son,tmp:longint;
+  begin
+    get:=heap[1]; 
+    heap[1]:=heap[len]; 
+    len:=len-1;
+    pa:=1;
+    while pa*2&lt;=len do
+    begin
+      if (pa*2+1&gt;len) or (heap[pa*2]&lt;heap[pa*2+1]) then son:=pa*2
+      else son:=pa*2+1;
+      if heap[pa]&gt;heap[son]then
+      begin
+        tmp:=heap[pa]; 
+        heap[pa]:=heap[son];
+        heap[son]:=tmp;
+        pa:=son;
+      end
+      else break;
+    end;
+  end;
+</code></pre>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[LCA Template]]></title>
         <id>https://xky5308222.github.io/post/lca-template/</id>
