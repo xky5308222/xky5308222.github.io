@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://xky5308222.github.io</id>
     <title>XKY&apos;s Home</title>
-    <updated>2020-02-28T01:51:58.525Z</updated>
+    <updated>2020-02-28T05:57:11.975Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://xky5308222.github.io"/>
     <link rel="self" href="https://xky5308222.github.io/atom.xml"/>
@@ -11,6 +11,61 @@
     <logo>https://xky5308222.github.io/images/avatar.png</logo>
     <icon>https://xky5308222.github.io/favicon.ico</icon>
     <rights>All rights reserved 2020, XKY&apos;s Home</rights>
+    <entry>
+        <title type="html"><![CDATA[LCA Template]]></title>
+        <id>https://xky5308222.github.io/post/lca-template/</id>
+        <link href="https://xky5308222.github.io/post/lca-template/">
+        </link>
+        <updated>2020-02-28T05:52:37.000Z</updated>
+        <content type="html"><![CDATA[<pre><code class="language-c++">#include &lt;iostream&gt;
+#include &lt;cstdio&gt;
+#include &lt;cstring&gt;
+#include &lt;algorithm&gt;
+using namespace std;
+struct zzz {
+    int t, nex;
+}e[500010 &lt;&lt; 1]; int head[500010], tot;
+void add(int x, int y) {
+    e[++tot].t = y;
+    e[tot].nex = head[x];
+    head[x] = tot;
+}
+int depth[500001], fa[500001][22], lg[500001];
+void dfs(int now, int fath) {//now表示当前节点，fath表示它的父亲节点
+    fa[now][0] = fath; depth[now] = depth[fath] + 1;
+    for(int i = 1; i &lt;= lg[depth[now]]; ++i)
+        fa[now][i] = fa[fa[now][i-1]][i-1];//意思是now的2^i祖先等于now的2^(i-1)祖先的2^(i-1)祖先
+    for(int i = head[now]; i; i = e[i].nex)
+        if(e[i].t != fath) dfs(e[i].t, now);
+}
+int LCA(int x, int y) {
+    if(depth[x] &lt; depth[y]) swap(x, y);//用数学语言来说就是：不妨设x的深度 &gt;= y的深度
+    while(depth[x] &gt; depth[y])
+        x = fa[x][lg[depth[x]-depth[y]] - 1];//先跳到同一深度
+    if(x == y) return x;//如果x是y的祖先，那他们的LCA肯定就是x了
+    for(int k = lg[depth[x]] - 1; k &gt;= 0; --k)//不断向上跳（lg就是之前说的常数优化）
+        if(fa[x][k] != fa[y][k])//因为我们要跳到它们LCA的下面一层，所以它们肯定不相等，如果不相等就跳过
+            x = fa[x][k], y = fa[y][k];
+    return fa[x][0];
+}
+int main() {
+    int n, m, s; scanf(&quot;%d%d%d&quot;, &amp;n, &amp;m, &amp;s);
+    for(int i = 1; i &lt;= n-1; ++i) {
+        int x, y; scanf(&quot;%d%d&quot;, &amp;x, &amp;y);
+        add(x, y); add(y, x);
+    }
+    for(int i = 1; i &lt;= n; ++i)
+        lg[i] = lg[i-1] + (1 &lt;&lt; lg[i-1] == i);//求logn 
+    dfs(s, 0);
+    for(int i = 1; i &lt;= m; ++i) {
+        int x, y; scanf(&quot;%d%d&quot;,&amp;x, &amp;y);
+        printf(&quot;%d\n&quot;, LCA(x, y));
+    }
+    return 0;
+}
+</code></pre>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[Solution [LuoguP1141] 01迷宫]]></title>
         <id>https://xky5308222.github.io/post/solution-luogup1141-01-mi-gong/</id>
@@ -93,7 +148,7 @@ end.
 <p>f[i][j]表示以i,j为右下角最多吃到的鱼</p>
 <p>f1[i][j]表示以i,j为左下角最多吃到的鱼</p>
 <p><s>那么显然：</s></p>
-<pre><code class="language-cpp">f[i][j]=f[i-1][j-1]+1;
+<pre><code class="language-c++">f[i][j]=f[i-1][j-1]+1;
 f1[i][j]=f1[i-1][j+1]+1;
 </code></pre>
 <h3 id="但是">但是！</h3>
@@ -102,7 +157,7 @@ f1[i][j]=f1[i-1][j+1]+1;
 </ul>
 <p>这该怎么判断呢？？！</p>
 <p>本人第一时间，想到了二维前缀和：</p>
-<pre><code class="language-cpp">s[i][j]=s[i][j-1]+s[i-1][j]-s[i-1][j-1]+a[i][j];
+<pre><code class="language-c++">s[i][j]=s[i][j-1]+s[i-1][j]-s[i-1][j-1]+a[i][j];
 </code></pre>
 <p>那么，只要我们在转移之前，判断：<strong>如果该矩阵的所有数的和等于这条对角线的长度，就转移；否则，赋值为1。</strong></p>
 <p>本蒟<s>非常happy，信心十足地</s>上交了，80……</p>
@@ -116,7 +171,7 @@ f1[i][j]=f1[i-1][j+1]+1;
 <h3 id="所以开始二分">所以！开始二分！</h3>
 <p>我们二分正方形矩阵的大小，判断是否符合要求，符合就记录下来，不断更新，找到符合要求的最大矩阵。</p>
 <p>思路就是这样，代码（c++）</p>
-<pre><code class="language-cpp">#include &lt;bits/stdc++.h&gt;
+<pre><code class="language-c++">#include &lt;bits/stdc++.h&gt;
 using namespace std;
 
 int a[2510][2510],f[2510][2510],f1[2510][2510],s[2510][2510];

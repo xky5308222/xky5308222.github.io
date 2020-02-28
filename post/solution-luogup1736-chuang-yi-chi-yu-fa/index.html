@@ -8,7 +8,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
-<link rel="shortcut icon" href="https://xky5308222.github.io/favicon.ico?v=1582854708647">
+<link rel="shortcut icon" href="https://xky5308222.github.io/favicon.ico?v=1582869343933">
 <link rel="stylesheet" href="https://xky5308222.github.io/styles/main.css">
 
 
@@ -38,7 +38,7 @@ f[i][j]表示以i,j为右下角最多吃..." />
   <div class="top-container" data-aos="fade-right">
     <div class="top-header-container">
       <a class="site-title-container" href="https://xky5308222.github.io">
-        <img src="https://xky5308222.github.io/images/avatar.png?v=1582854708647" class="site-logo">
+        <img src="https://xky5308222.github.io/images/avatar.png?v=1582869343933" class="site-logo">
         <h1 class="site-title">XKY&#39;s Home</h1>
       </a>
       <div class="menu-btn" @click="menuVisible = !menuVisible">
@@ -112,7 +112,7 @@ f[i][j]表示以i,j为右下角最多吃..." />
 <p>f[i][j]表示以i,j为右下角最多吃到的鱼</p>
 <p>f1[i][j]表示以i,j为左下角最多吃到的鱼</p>
 <p><s>那么显然：</s></p>
-<pre><code class="language-cpp">f[i][j]=f[i-1][j-1]+1;
+<pre><code class="language-c++">f[i][j]=f[i-1][j-1]+1;
 f1[i][j]=f1[i-1][j+1]+1;
 </code></pre>
 <h3 id="但是">但是！</h3>
@@ -121,7 +121,7 @@ f1[i][j]=f1[i-1][j+1]+1;
 </ul>
 <p>这该怎么判断呢？？！</p>
 <p>本人第一时间，想到了二维前缀和：</p>
-<pre><code class="language-cpp">s[i][j]=s[i][j-1]+s[i-1][j]-s[i-1][j-1]+a[i][j];
+<pre><code class="language-c++">s[i][j]=s[i][j-1]+s[i-1][j]-s[i-1][j-1]+a[i][j];
 </code></pre>
 <p>那么，只要我们在转移之前，判断：<strong>如果该矩阵的所有数的和等于这条对角线的长度，就转移；否则，赋值为1。</strong></p>
 <p>本蒟<s>非常happy，信心十足地</s>上交了，80……</p>
@@ -135,7 +135,7 @@ f1[i][j]=f1[i-1][j+1]+1;
 <h3 id="所以开始二分">所以！开始二分！</h3>
 <p>我们二分正方形矩阵的大小，判断是否符合要求，符合就记录下来，不断更新，找到符合要求的最大矩阵。</p>
 <p>思路就是这样，代码（c++）</p>
-<pre><code class="language-cpp">#include &lt;bits/stdc++.h&gt;
+<pre><code class="language-c++">#include &lt;bits/stdc++.h&gt;
 using namespace std;
 
 int a[2510][2510],f[2510][2510],f1[2510][2510],s[2510][2510];

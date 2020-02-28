@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" >
 
-<title>Solution [LuoguP1141] 01迷宫 | XKY&#39;s Home</title>
+<title>LCA Template | XKY&#39;s Home</title>
 
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
@@ -24,12 +24,12 @@
 
 
 
-    <meta name="description" content="其实这道题目的思想就是bfs，有些困难的是数据太大，不能裸搜
-因为当（x1,y1）和（x2,y2）是连通的时候，它们的答案必定相等
-所以我们就将搜到的点的答案都记录下来，到时候直接拿出来用就可以了！
-代码（pascal）
-const dx:..." />
-    <meta name="keywords" content="Solution" />
+    <meta name="description" content="#include &lt;iostream&gt;
+#include &lt;cstdio&gt;
+#include &lt;cstring&gt;
+#include &lt;algorithm&gt;
+using namespace st..." />
+    <meta name="keywords" content="Template&Notes" />
   </head>
   <body>
     <div id="app" class="main">
@@ -101,78 +101,64 @@ const dx:..." />
       <div class="main-container">
         <div class="content-container" data-aos="fade-up">
           <div class="post-detail">
-            <h2 class="post-title">Solution [LuoguP1141] 01迷宫</h2>
+            <h2 class="post-title">LCA Template</h2>
             <div class="post-date">2020-02-28</div>
             
             <div class="post-content" v-pre>
-              <h3 id="其实这道题目的思想就是bfs有些困难的是数据太大不能裸搜">其实这道题目的思想就是bfs，有些困难的是数据太大，不能裸搜</h3>
-<h3 id="因为当x1y1和x2y2是连通的时候它们的答案必定相等">因为当（x1,y1）和（x2,y2）是连通的时候，它们的答案必定相等</h3>
-<h3 id="所以我们就将搜到的点的答案都记录下来到时候直接拿出来用就可以了">所以我们就将搜到的点的答案都记录下来，到时候直接拿出来用就可以了！</h3>
-<p>代码（pascal）</p>
-<pre><code class="language-pascal">const dx:array[1..4] of longint=(0,1,0,-1);
-      dy:array[1..4] of longint=(1,0,-1,0);
-var n,m,xx,yy,i,j:longint;
-    ans,a:array[0..1001,0..1001] of longint;
-    f:array[0..1001,0..1001] of boolean;
-    b:array[0..1000001] of record x,y:longint; end;
-    k:char;
-
-procedure bfs(x1,y1:longint);
-  var h,t,i,t1,t2:longint;
-  begin
-    h:=0;t:=1;
-    b[1].x:=x1;
-    b[1].y:=y1;//本人的程序刚开始前面加了fillchar就TLE……
-    f[x1][y1]:=true;
-    while(h&lt;t)do
-    begin
-      inc(h);
-      for i:=1 to 4 do
-      begin
-        t1:=b[h].x+dx[i];
-        t2:=b[h].y+dy[i];
-        if (t1&lt;1) or (t1&gt;n) or (t2&lt;1) or (t2&gt;n) then continue;
-        if (not f[t1][t2]) and (1-a[b[h].x][b[h].y]=a[t1][t2]) then
-        begin
-          inc(t);
-          b[t].x:=t1;
-          b[t].y:=t2;
-          f[t1][t2]:=true;
-        end;
-      end;
-    end;
-    for i:=1 to t do ans[b[i].x][b[i].y]:=t;//将已经走过的点的答案保存下来
-  end;
-
-begin
-  readln(n,m);
-  for i:=1 to n do
-  begin
-    for j:=1 to n do
-    begin
-      read(k);
-      a[i][j]:=ord(k)-48;
-    end;
-    readln;
-  end;
-  fillchar(ans,sizeof(ans),255);
-  for i:=1 to n do//先全部扫一遍
-    for j:=1 to n do
-      if not f[i][j] then bfs(i,j);
-  for i:=1 to m do
-  begin
-    readln(xx,yy);
-    writeln(ans[xx][yy]);
-  end;
-end.
+              <pre><code class="language-c++">#include &lt;iostream&gt;
+#include &lt;cstdio&gt;
+#include &lt;cstring&gt;
+#include &lt;algorithm&gt;
+using namespace std;
+struct zzz {
+    int t, nex;
+}e[500010 &lt;&lt; 1]; int head[500010], tot;
+void add(int x, int y) {
+    e[++tot].t = y;
+    e[tot].nex = head[x];
+    head[x] = tot;
+}
+int depth[500001], fa[500001][22], lg[500001];
+void dfs(int now, int fath) {//now表示当前节点，fath表示它的父亲节点
+    fa[now][0] = fath; depth[now] = depth[fath] + 1;
+    for(int i = 1; i &lt;= lg[depth[now]]; ++i)
+        fa[now][i] = fa[fa[now][i-1]][i-1];//意思是now的2^i祖先等于now的2^(i-1)祖先的2^(i-1)祖先
+    for(int i = head[now]; i; i = e[i].nex)
+        if(e[i].t != fath) dfs(e[i].t, now);
+}
+int LCA(int x, int y) {
+    if(depth[x] &lt; depth[y]) swap(x, y);//用数学语言来说就是：不妨设x的深度 &gt;= y的深度
+    while(depth[x] &gt; depth[y])
+        x = fa[x][lg[depth[x]-depth[y]] - 1];//先跳到同一深度
+    if(x == y) return x;//如果x是y的祖先，那他们的LCA肯定就是x了
+    for(int k = lg[depth[x]] - 1; k &gt;= 0; --k)//不断向上跳（lg就是之前说的常数优化）
+        if(fa[x][k] != fa[y][k])//因为我们要跳到它们LCA的下面一层，所以它们肯定不相等，如果不相等就跳过
+            x = fa[x][k], y = fa[y][k];
+    return fa[x][0];
+}
+int main() {
+    int n, m, s; scanf(&quot;%d%d%d&quot;, &amp;n, &amp;m, &amp;s);
+    for(int i = 1; i &lt;= n-1; ++i) {
+        int x, y; scanf(&quot;%d%d&quot;, &amp;x, &amp;y);
+        add(x, y); add(y, x);
+    }
+    for(int i = 1; i &lt;= n; ++i)
+        lg[i] = lg[i-1] + (1 &lt;&lt; lg[i-1] == i);//求logn 
+    dfs(s, 0);
+    for(int i = 1; i &lt;= m; ++i) {
+        int x, y; scanf(&quot;%d%d&quot;,&amp;x, &amp;y);
+        printf(&quot;%d\n&quot;, LCA(x, y));
+    }
+    return 0;
+}
 </code></pre>
 
             </div>
             
               <div class="tag-container">
                 
-                  <a href="https://xky5308222.github.io/tag/UBToCCNPV/" class="tag">
-                    Solution
+                  <a href="https://xky5308222.github.io/tag/SIRGW3cr9/" class="tag">
+                    Template&amp;Notes
                   </a>
                 
               </div>
@@ -180,9 +166,9 @@ end.
             
               <div class="next-post">
                 <div class="next">下一篇</div>
-                <a href="https://xky5308222.github.io/post/solution-luogup1736-chuang-yi-chi-yu-fa/">
+                <a href="https://xky5308222.github.io/post/solution-luogup1141-01-mi-gong/">
                   <h3 class="post-title">
-                    Solution [LuoguP1736] 创意吃鱼法
+                    Solution [LuoguP1141] 01迷宫
                   </h3>
                 </a>
               </div>
