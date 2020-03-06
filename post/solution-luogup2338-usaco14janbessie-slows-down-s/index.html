@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" >
 
-<title>关于 | XKY&#39;s Home</title>
+<title>Solution [LuoguP2338] [USACO14JAN]Bessie Slows Down S | XKY&#39;s Home</title>
 
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
@@ -24,15 +24,10 @@
 
 
 
-    <meta name="description" content="
-欢迎来到我的小站呀，很高兴遇见你！🤝
-
-🏠 关于本站
-👨‍💻 博主是谁
-⛹ 兴趣爱好
-📬 联系我呀
-..." />
-    <meta name="keywords" content="" />
+    <meta name="description" content="随机跳题进来，看见是蓝题本来想逃，结果仔细一看好像是本蒟蒻最喜欢的死模拟。
+楼上几位dalao思路已经说得相当明确了，建t和d两个vector，用两个指针扫一遍，每次比较当前t和d谁先进行就好了~
+本蒟蒻只想对代码的注释补充一下，以防止本蒟..." />
+    <meta name="keywords" content="Solution" />
   </head>
   <body>
     <div id="app" class="main">
@@ -104,20 +99,69 @@
       <div class="main-container">
         <div class="content-container" data-aos="fade-up">
           <div class="post-detail">
-            <h2 class="post-title">关于</h2>
-            <div class="post-date">2019-01-25</div>
+            <h2 class="post-title">Solution [LuoguP2338] [USACO14JAN]Bessie Slows Down S</h2>
+            <div class="post-date">2020-02-28</div>
             
             <div class="post-content" v-pre>
-              <blockquote>
-<p>欢迎来到我的小站呀，很高兴遇见你！🤝</p>
-</blockquote>
-<h2 id="关于本站">🏠 关于本站</h2>
-<h2 id="博主是谁">👨‍💻 博主是谁</h2>
-<h2 id="兴趣爱好">⛹ 兴趣爱好</h2>
-<h2 id="联系我呀">📬 联系我呀</h2>
+              <h4 id="随机跳题进来看见是蓝题本来想逃结果仔细一看好像是本蒟蒻最喜欢的死模拟">随机跳题进来，看见是蓝题<s>本来想逃</s>，结果仔细一看好像是本蒟蒻最喜欢的死模拟。</h4>
+<p>楼上几位dalao思路已经说得相当明确了，建t和d两个vector，用两个指针扫一遍，每次比较当前t和d谁先进行就好了~</p>
+<p>本蒟蒻只想对代码的注释补充一下，以防止本蒟蒻从前看注解感人的题解的悲剧重出江湖……</p>
+<h2 id="code"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>C</mi><mi>o</mi><mi>d</mi><mi>e</mi></mrow><annotation encoding="application/x-tex">Code</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.07153em;">C</span><span class="mord mathdefault">o</span><span class="mord mathdefault">d</span><span class="mord mathdefault">e</span></span></span></span></h2>
+<pre><code class="language-c++">#include &lt;bits/stdc++.h&gt;
+using namespace std;
+
+int t[10010],d[10010];
+
+int main()
+{
+	int n,ct=0,cd=0;
+	scanf(&quot;%d&quot;,&amp;n);
+	getchar();
+	for(int i=1;i&lt;=n;i++){
+		char ch=getchar();
+		getchar();
+		if (ch=='T') scanf(&quot;%d&quot;,&amp;t[++ct]);
+		else scanf(&quot;%d&quot;,&amp;d[++cd]);
+		getchar();
+	}//getchar“基本”操作（不要问我是怎么知道的，纯靠手调QWQ）
+	sort(t+1,t+ct+1);
+	sort(d+1,d+cd+1);
+	t[ct+1]=INT_MAX,d[cd+1]=INT_MAX;//小细节处理，防止一边已经处理完了另一边跑炸了
+	int pt=1,pd=1,v=1;
+	double time=0,s=0;
+	while((pt&lt;=ct) || (pd&lt;=cd)){
+		double v1=1.0/v;//计算速度
+		double st=(t[pt]*1.0-time)*v1+s,sd=d[pd];//注意这里计算的是**从出发点**到该时间段所在位置的距离
+		if (st&lt;sd) time=t[pt],pt++,s=st;//这里就不要用s/v了，猜测可能精度会出锅
+		else time+=(sd-s)/v1,pd++,s=sd;
+		v++;
+	}
+	time+=(1000-s)/(1.0/(1.0*v));//把最后的路走完，注意double的处理
+	int ans=(int)(time+0.5);//别忘了四舍五入
+	printf(&quot;%d\n&quot;,ans);
+	return 0;
+}
+</code></pre>
 
             </div>
             
+              <div class="tag-container">
+                
+                  <a href="https://xky5308222.github.io/tag/UBToCCNPV/" class="tag">
+                    Solution
+                  </a>
+                
+              </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://xky5308222.github.io/post/heap-template/">
+                  <h3 class="post-title">
+                    Heap Template
+                  </h3>
+                </a>
+              </div>
             
 
             
