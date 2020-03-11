@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" >
 
-<title>Heap Template | XKY&#39;s Home</title>
+<title>LCS Template | XKY&#39;s Home</title>
 
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
@@ -24,10 +24,10 @@
 
 
 
-    <meta name="description" content="其实好像也没什么模版
-STL版
-priority_queue&lt;int,vector&lt;int&gt;,greater&lt;int&gt; &gt; q;//小根堆
-priority_queue&lt;int,vector&lt;..." />
+    <meta name="description" content="首先，我们建立一个类似于map的映射关系q[a[i]]=i,接下去让ta在另一个序列当中体现出来。
+这样本体就转化为一个求q[b[i]]的LIS的问题了。
+如何使用二分搜索？
+（注意，以下内容转载自 @I_AM_HelloWord 的Luo..." />
     <meta name="keywords" content="Template&Notes" />
   </head>
   <body>
@@ -100,63 +100,53 @@ priority_queue&lt;int,vector&lt;..." />
       <div class="main-container">
         <div class="content-container" data-aos="fade-up">
           <div class="post-detail">
-            <h2 class="post-title">Heap Template</h2>
-            <div class="post-date">2020-02-28</div>
+            <h2 class="post-title">LCS Template</h2>
+            <div class="post-date">2020-03-11</div>
             
-              <div class="feature-container" style="background-image: url('https://xky5308222.github.io/post-images/heap-template.png')">
+              <div class="feature-container" style="background-image: url('https://xky5308222.github.io/post-images/lcs-template.png')">
               </div>
             
             <div class="post-content" v-pre>
-              <p><s>其实好像也没什么模版</s><br>
-STL版</p>
-<pre><code class="language-c++">priority_queue&lt;int,vector&lt;int&gt;,greater&lt;int&gt; &gt; q;//小根堆
-priority_queue&lt;int,vector&lt;int&gt; &gt; q;//大根堆
+              <p>首先，我们建立一个类似于map的映射关系<code>q[a[i]]=i</code>,接下去让ta在另一个序列当中体现出来。</p>
+<p>这样本体就转化为一个求<code>q[b[i]]</code>的LIS的问题了。</p>
+<h2 id="如何使用二分搜索">如何使用二分搜索？</h2>
+<p>（注意，以下内容转载自 @I_AM_HelloWord 的Luogu题解）<br>
+考虑一个数列5 2 3 1 4</p>
+<p>首先，把5加入答案序列中，然后加2，发现2&lt;5所以显然2替换5不会使结果更差，</p>
+<p>那么答案序列就是{2},然后加3，发现3&gt;2，所以直接把3加到答案序列中：{2,3}</p>
+<p>然后加1，我们发现1&lt;3，于是我们找到一个最小的但是比1大的数字2，然后把1替换2，为什么这么做不会影响结果呢？你可以这么想，我们当前已经求出了一个当前最优的序列，如果我们用1替换2，然后后面来一个数字替换了3，那么我们就可以得到一个更优的序列，而如果没有数字替换3，那么这个1替换2也就是没有贡献的，不会影响我们结果的最优性。至于，如何找到一个最小的但是大于某个数字的数字，弄个二分查找就行了，因为我们的答案序列是有序的呀。</p>
+<h2 id="code"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>C</mi><mi>o</mi><mi>d</mi><mi>e</mi></mrow><annotation encoding="application/x-tex">Code</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.07153em;">C</span><span class="mord mathdefault">o</span><span class="mord mathdefault">d</span><span class="mord mathdefault">e</span></span></span></span></h2>
+<pre><code class="language-c++">#include &lt;bits/stdc++.h&gt;
+using namespace std;
 
-struct cmp{
-    bool operator()(const int a,const int b) const{
-        return a % 10&gt;b % 10;
-    }
-};
+int a[100010],b[100010],q[100010],f[100010];
 
-priority_queue&lt; int , vector &lt; int &gt; , cmp &gt; Q;//自定义的堆
-</code></pre>
-<p>标准版（<s>实在不好意思再写c++，给P党放个福利</s>）</p>
-<pre><code class="language-pascal">procedure put(x:longint);//插入元素
-  var fa,son,tmp:longint;
-  begin
-    len:=len+1;
-    heap[len]:=x;
-    son:=len;
-    while (son&lt;&gt;1) and (heap[son div 2]&gt;heap[son]) do
-    begin
-      temp:=heap[son div 2];
-      heap[son div 2]:=heap[son];
-      heap[son]:=temp;
-      son:=son div 2;
-    end;
-  end;
-
-function get:longint;//取出堆顶
-  var pa,son,tmp:longint;
-  begin
-    get:=heap[1]; 
-    heap[1]:=heap[len]; 
-    len:=len-1;
-    pa:=1;
-    while pa*2&lt;=len do
-    begin
-      if (pa*2+1&gt;len) or (heap[pa*2]&lt;heap[pa*2+1]) then son:=pa*2
-      else son:=pa*2+1;
-      if heap[pa]&gt;heap[son]then
-      begin
-        tmp:=heap[pa]; 
-        heap[pa]:=heap[son];
-        heap[son]:=tmp;
-        pa:=son;
-      end
-      else break;
-    end;
-  end;
+int main()
+{
+	int n,ans=0;
+	scanf(&quot;%d&quot;,&amp;n);
+	for(int i=1;i&lt;=n;i++){
+		scanf(&quot;%d&quot;,&amp;a[i]);
+		q[a[i]]=i;//映射
+	}
+	for(int i=1;i&lt;=n;i++)
+		scanf(&quot;%d&quot;,&amp;b[i]);
+	for(int i=1;i&lt;=n;i++){
+		int x=q[b[i]];
+		if (x&gt;f[ans]) ans++,f[ans]=x;//如果大于当前答案序列的最后一个数，就直接加入。
+		else{
+			int l=0,r=ans,k=-1;
+			while(l&lt;=r){
+				int mid=(l+r)&gt;&gt;1;
+				if (x&lt;f[mid]) k=mid,r=mid-1;
+				else l=mid+1;
+			}//否则二分查找比当前的数大的最小数，更新答案。
+			if (x&lt;f[k]) f[k]=x;
+		}
+	}
+	printf(&quot;%d\n&quot;,ans);
+	return 0;
+}
 </code></pre>
 
             </div>
@@ -172,9 +162,9 @@ function get:longint;//取出堆顶
             
               <div class="next-post">
                 <div class="next">下一篇</div>
-                <a href="https://xky5308222.github.io/post/lca-template/">
+                <a href="https://xky5308222.github.io/post/ti-jie-p6189-noi-online-ru-men-zu-pao-bu/">
                   <h3 class="post-title">
-                    LCA Template
+                    题解 P6189 【[NOI Online 入门组]跑步】
                   </h3>
                 </a>
               </div>

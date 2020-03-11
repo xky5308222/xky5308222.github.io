@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://xky5308222.github.io</id>
     <title>XKY&apos;s Home</title>
-    <updated>2020-03-06T01:38:25.548Z</updated>
+    <updated>2020-03-11T12:11:44.220Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://xky5308222.github.io"/>
     <link rel="self" href="https://xky5308222.github.io/atom.xml"/>
@@ -11,6 +11,149 @@
     <logo>https://xky5308222.github.io/images/avatar.png</logo>
     <icon>https://xky5308222.github.io/favicon.ico</icon>
     <rights>All rights reserved 2020, XKY&apos;s Home</rights>
+    <entry>
+        <title type="html"><![CDATA[LCS Template]]></title>
+        <id>https://xky5308222.github.io/post/lcs-template/</id>
+        <link href="https://xky5308222.github.io/post/lcs-template/">
+        </link>
+        <updated>2020-03-11T12:02:46.000Z</updated>
+        <content type="html"><![CDATA[<p>首先，我们建立一个类似于map的映射关系<code>q[a[i]]=i</code>,接下去让ta在另一个序列当中体现出来。</p>
+<p>这样本体就转化为一个求<code>q[b[i]]</code>的LIS的问题了。</p>
+<h2 id="如何使用二分搜索">如何使用二分搜索？</h2>
+<p>（注意，以下内容转载自 @I_AM_HelloWord 的Luogu题解）<br>
+考虑一个数列5 2 3 1 4</p>
+<p>首先，把5加入答案序列中，然后加2，发现2&lt;5所以显然2替换5不会使结果更差，</p>
+<p>那么答案序列就是{2},然后加3，发现3&gt;2，所以直接把3加到答案序列中：{2,3}</p>
+<p>然后加1，我们发现1&lt;3，于是我们找到一个最小的但是比1大的数字2，然后把1替换2，为什么这么做不会影响结果呢？你可以这么想，我们当前已经求出了一个当前最优的序列，如果我们用1替换2，然后后面来一个数字替换了3，那么我们就可以得到一个更优的序列，而如果没有数字替换3，那么这个1替换2也就是没有贡献的，不会影响我们结果的最优性。至于，如何找到一个最小的但是大于某个数字的数字，弄个二分查找就行了，因为我们的答案序列是有序的呀。</p>
+<h2 id="code"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>C</mi><mi>o</mi><mi>d</mi><mi>e</mi></mrow><annotation encoding="application/x-tex">Code</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.07153em;">C</span><span class="mord mathdefault">o</span><span class="mord mathdefault">d</span><span class="mord mathdefault">e</span></span></span></span></h2>
+<pre><code class="language-c++">#include &lt;bits/stdc++.h&gt;
+using namespace std;
+
+int a[100010],b[100010],q[100010],f[100010];
+
+int main()
+{
+	int n,ans=0;
+	scanf(&quot;%d&quot;,&amp;n);
+	for(int i=1;i&lt;=n;i++){
+		scanf(&quot;%d&quot;,&amp;a[i]);
+		q[a[i]]=i;//映射
+	}
+	for(int i=1;i&lt;=n;i++)
+		scanf(&quot;%d&quot;,&amp;b[i]);
+	for(int i=1;i&lt;=n;i++){
+		int x=q[b[i]];
+		if (x&gt;f[ans]) ans++,f[ans]=x;//如果大于当前答案序列的最后一个数，就直接加入。
+		else{
+			int l=0,r=ans,k=-1;
+			while(l&lt;=r){
+				int mid=(l+r)&gt;&gt;1;
+				if (x&lt;f[mid]) k=mid,r=mid-1;
+				else l=mid+1;
+			}//否则二分查找比当前的数大的最小数，更新答案。
+			if (x&lt;f[k]) f[k]=x;
+		}
+	}
+	printf(&quot;%d\n&quot;,ans);
+	return 0;
+}
+</code></pre>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[题解 P6189 【[NOI Online 入门组]跑步】]]></title>
+        <id>https://xky5308222.github.io/post/ti-jie-p6189-noi-online-ru-men-zu-pao-bu/</id>
+        <link href="https://xky5308222.github.io/post/ti-jie-p6189-noi-online-ru-men-zu-pao-bu/">
+        </link>
+        <updated>2020-03-11T12:00:21.000Z</updated>
+        <content type="html"><![CDATA[<p>话说现在连<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>p</mi><mi>j</mi></mrow><annotation encoding="application/x-tex">pj</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.85396em;vertical-align:-0.19444em;"></span><span class="mord mathdefault">p</span><span class="mord mathdefault" style="margin-right:0.05724em;">j</span></span></span></span>都考这么变态的数学题了吗……</p>
+<h4 id="回归正题">回归正题</h4>
+<p>看到这道题目，相信大家就一定想到了一个初赛中经常遇到的模型：</p>
+<p>有 $ n $ 个完全相同的盒子和 $ n $个完全相同的小球，允许盒子为空，求有多少种不同的放法？</p>
+<p>其实这道题本质上和上面的问题是完全相同的。</p>
+<p>初赛的时候数据小手推就可以了，但是现在<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>1</mn><mo>≤</mo><mi>n</mi><mo>≤</mo><mn>1</mn><msup><mn>0</mn><mn>5</mn></msup></mrow><annotation encoding="application/x-tex">1≤n≤10 
+^5</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.78041em;vertical-align:-0.13597em;"></span><span class="mord">1</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.7719400000000001em;vertical-align:-0.13597em;"></span><span class="mord mathdefault">n</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.8141079999999999em;vertical-align:0em;"></span><span class="mord">1</span><span class="mord"><span class="mord">0</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">5</span></span></span></span></span></span></span></span></span></span></span><br>
+，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>1</mn><mo>≤</mo><mi>p</mi><mo>&lt;</mo><msup><mn>2</mn><mn>30</mn></msup></mrow><annotation encoding="application/x-tex">1 \leq p &lt; 2^{30}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.78041em;vertical-align:-0.13597em;"></span><span class="mord">1</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.7335400000000001em;vertical-align:-0.19444em;"></span><span class="mord mathdefault">p</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">&lt;</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.8141079999999999em;vertical-align:0em;"></span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">3</span><span class="mord mtight">0</span></span></span></span></span></span></span></span></span></span></span></span>，显然<s>dabiao</s>是不现实的。</p>
+<p>那么应该如何解呢？</p>
+<h3 id="大家要注意的是这是一场online测试">大家要注意的是！这是一场Online测试。</h3>
+<h3 id="所以我们要充分地利用网络">所以，我们要充分地利用网络。</h3>
+<p>我们可以先尝试着推前几个.</p>
+<p><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>n</mi><mo>=</mo><mn>1</mn><mo separator="true">,</mo><mi>a</mi><mi>n</mi><mi>s</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">n=1,ans=1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault">n</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.8388800000000001em;vertical-align:-0.19444em;"></span><span class="mord">1</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault">a</span><span class="mord mathdefault">n</span><span class="mord mathdefault">s</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">1</span></span></span></span>//(1)</p>
+<p><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>n</mi><mo>=</mo><mn>2</mn><mo separator="true">,</mo><mi>a</mi><mi>n</mi><mi>s</mi><mo>=</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">n=2,ans=2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault">n</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.8388800000000001em;vertical-align:-0.19444em;"></span><span class="mord">2</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault">a</span><span class="mord mathdefault">n</span><span class="mord mathdefault">s</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">2</span></span></span></span>//(2,0),(1,1)</p>
+<p><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>n</mi><mo>=</mo><mn>3</mn><mo separator="true">,</mo><mi>a</mi><mi>n</mi><mi>s</mi><mo>=</mo><mn>3</mn></mrow><annotation encoding="application/x-tex">n=3,ans=3</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault">n</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.8388800000000001em;vertical-align:-0.19444em;"></span><span class="mord">3</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault">a</span><span class="mord mathdefault">n</span><span class="mord mathdefault">s</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">3</span></span></span></span>//(3,0,0),(2,1,0),(1,1,1)</p>
+<p><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>n</mi><mo>=</mo><mn>4</mn><mo separator="true">,</mo><mi>a</mi><mi>n</mi><mi>s</mi><mo>=</mo><mn>5</mn></mrow><annotation encoding="application/x-tex">n=4,ans=5</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault">n</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.8388800000000001em;vertical-align:-0.19444em;"></span><span class="mord">4</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault">a</span><span class="mord mathdefault">n</span><span class="mord mathdefault">s</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">5</span></span></span></span>//(4,0,0,0),(3,1,0,0)(2,2,0,0)(2,1,1,0)(1,1,1,1)</p>
+<p><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>n</mi><mo>=</mo><mn>5</mn><mo separator="true">,</mo><mi>a</mi><mi>n</mi><mi>s</mi><mo>=</mo><mn>7</mn></mrow><annotation encoding="application/x-tex">n=5,ans=7</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault">n</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.8388800000000001em;vertical-align:-0.19444em;"></span><span class="mord">5</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault">a</span><span class="mord mathdefault">n</span><span class="mord mathdefault">s</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">7</span></span></span></span>//太长了，请dalao们自己去推算吧</p>
+<p><s>众所周知，</s>，有一个非常神奇的网站叫做<a href="http://oeis.org/">OEIS</a>。</p>
+<p>将我们刚才找到的规律1,2,3,5,7输入，很快得到一个数列<a href="http://oeis.org/search?q=1%2C2%2C3%2C5%2C7&amp;sort=&amp;language=english&amp;go=Search">A000041</a>。</p>
+<p>阿嘞！全是英文，想我这种初二的蒟蒻如何看得懂？</p>
+<p>但是，当你仔细地观察后，就会发现长长的解释中有一段名为PROG的版块，其中有一个<s>在本蒟蒻眼里</s>看着是伪代码的东西。</p>
+<pre><code class="language-python">def A000041(n):
+    if n == 0: return 1
+    S = 0; J = n-1; k = 2
+    while 0 &lt;= J:
+        T = A000041(J)
+        S = S+T if is_odd(k//2) else S-T
+        J -= k if is_odd(k) else k//2
+        k += 1
+    return S
+</code></pre>
+<p><s>Python党大胜利！</s><br>
+接下来的工作就相当容易了。我们把代码翻译成c++，然后把取模啊，记忆化搜索等等全部加上去就可以了。</p>
+<h2 id="code"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>C</mi><mi>o</mi><mi>d</mi><mi>e</mi></mrow><annotation encoding="application/x-tex">Code</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.07153em;">C</span><span class="mord mathdefault">o</span><span class="mord mathdefault">d</span><span class="mord mathdefault">e</span></span></span></span></h2>
+<pre><code class="language-c++">ll sol(int x){
+	if (x==0) return 1;
+	if (dp[x]&gt;0) return dp[x];//记忆化
+	ll s=0,j=x-1,k=2;
+	while(0&lt;=j){
+		ll t=sol(j);
+		if ((k/2)&amp;1) s=(s+t)%p;
+		else s=(s-t+p)%p;
+		if (k&amp;1) j-=k;
+		else j-=(k/2);
+		k++;
+	}
+	dp[x]=s;//记忆化
+	return s;//也没有什么好解释了，纯翻译……
+}
+</code></pre>
+<h3 id="然而">然而！</h3>
+<p>我却惊奇的发现第三个样例竟然过不了……</p>
+<p>万分无奈的，本蒟蒻有将上面的代码修改成了dp。</p>
+<h2 id="ac-code"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>A</mi><mi>C</mi></mrow><annotation encoding="application/x-tex">AC</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault">A</span><span class="mord mathdefault" style="margin-right:0.07153em;">C</span></span></span></span> <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>C</mi><mi>o</mi><mi>d</mi><mi>e</mi></mrow><annotation encoding="application/x-tex">Code</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.07153em;">C</span><span class="mord mathdefault">o</span><span class="mord mathdefault">d</span><span class="mord mathdefault">e</span></span></span></span></h2>
+<pre><code class="language-c++">#include &lt;bits/stdc++.h&gt;
+using namespace std;
+
+typedef long long ll;
+ll n,p,dp[100010];
+
+int main()
+{
+	scanf(&quot;%lld%lld&quot;,&amp;n,&amp;p);
+	dp[0]=1;
+	for(int i=1;i&lt;=n;i++){
+		ll j=i-1,k=2;
+		while(0&lt;=j){
+			if ((k/2)&amp;1) dp[i]=(dp[i]+dp[j])%p;
+			else dp[i]=(dp[i]-dp[j]+p)%p;
+			if (k&amp;1) j-=k;
+			else j-=(k/2);
+			k++;
+		}//其实除了把x,s,t这些乱七八糟的换了一下，几乎没有什么区别…
+	}
+	printf(&quot;%lld\n&quot;,dp[n]);
+	return 0;
+}
+</code></pre>
+<h3 id="总结">总结：</h3>
+<ul>
+<li><s>要充分利用网络</s></li>
+<li>本题解纯粹供<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>p</mi><mi>j</mi></mrow><annotation encoding="application/x-tex">pj</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.85396em;vertical-align:-0.19444em;"></span><span class="mord mathdefault">p</span><span class="mord mathdefault" style="margin-right:0.05724em;">j</span></span></span></span>选手娱乐，请各位大佬们自行跳过！</li>
+<li>来自蒟蒻的忠告：希望大家在日常做题中不要过多利用此方法<br>
+<s>（否则可能被kkk禁掉）</s>……</li>
+</ul>
+<p>最后，感谢<s>xjd</s>大佬提供的神奇思路</p>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[Solution [LuoguP2338] [USACO14JAN]Bessie Slows Down S]]></title>
         <id>https://xky5308222.github.io/post/solution-luogup2338-usaco14janbessie-slows-down-s/</id>
