@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://xky5308222.github.io</id>
     <title>XKY&apos;s Home</title>
-    <updated>2020-03-11T12:11:44.220Z</updated>
+    <updated>2020-03-21T13:29:54.628Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://xky5308222.github.io"/>
     <link rel="self" href="https://xky5308222.github.io/atom.xml"/>
@@ -11,6 +11,58 @@
     <logo>https://xky5308222.github.io/images/avatar.png</logo>
     <icon>https://xky5308222.github.io/favicon.ico</icon>
     <rights>All rights reserved 2020, XKY&apos;s Home</rights>
+    <entry>
+        <title type="html"><![CDATA[Fast Read&Print Template]]></title>
+        <id>https://xky5308222.github.io/post/fast-readandprint-template/</id>
+        <link href="https://xky5308222.github.io/post/fast-readandprint-template/">
+        </link>
+        <updated>2020-03-21T13:22:47.000Z</updated>
+        <content type="html"><![CDATA[<pre><code class="language-cpp">inline char nc(){
+  static char buf[100000],*p1=buf,*p2=buf;
+  if (p1==p2) { p2=(p1=buf)+fread(buf,1,100000,stdin); if (p1==p2) return EOF; }
+  return *p1++;
+}//fread平时还是省着点歇歇吧，除非是真的卡常了……
+ 
+inline void read(int &amp;x){
+  char c=nc();int b=1;
+  for (;!(c&gt;='0' &amp;&amp; c&lt;='9');c=nc()) if (c=='-') b=-1;
+  for (x=0;c&gt;='0' &amp;&amp; c&lt;='9';x=x*10+c-'0',c=nc()); x*=b;
+}
+ 
+inline void read(LL &amp;x){
+  char c=nc();LL b=1;
+  for (;!(c&gt;='0' &amp;&amp; c&lt;='9');c=nc()) if (c=='-') b=-1;
+  for (x=0;c&gt;='0' &amp;&amp; c&lt;='9';x=x*10+c-'0',c=nc()); x*=b;
+}
+
+inline int read(char *s)
+{
+	char c=nc();int len=0;
+	for(;!(c&gt;='A' &amp;&amp; c&lt;='Z');c=nc()) if (c==EOF) return 0;
+	for(;(c&gt;='A' &amp;&amp; c&lt;='Z');s[len++]=c,c=nc());
+	s[len++]='\0';
+	return len;
+}
+
+inline void read(char &amp;x){
+  for (x=nc();!(x&gt;='A' &amp;&amp; x&lt;='Z');x=nc());
+}
+
+int wt,ss[19];
+inline void print(int x){
+	if (x&lt;0) x=-x,putchar('-'); 
+	if (!x) putchar(48); else {
+	for (wt=0;x;ss[++wt]=x%10,x/=10);
+	for (;wt;putchar(ss[wt]+48),wt--);}
+}
+
+inline void print(LL x){
+	if (x&lt;0) x=-x,putchar('-');
+	if (!x) putchar(48); else {for (wt=0;x;ss[++wt]=x%10,x/=10);for (;wt;putchar(ss[wt]+48),wt--);}
+}
+</code></pre>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[LCS Template]]></title>
         <id>https://xky5308222.github.io/post/lcs-template/</id>
@@ -69,11 +121,10 @@ int main()
         <content type="html"><![CDATA[<p>话说现在连<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>p</mi><mi>j</mi></mrow><annotation encoding="application/x-tex">pj</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.85396em;vertical-align:-0.19444em;"></span><span class="mord mathdefault">p</span><span class="mord mathdefault" style="margin-right:0.05724em;">j</span></span></span></span>都考这么变态的数学题了吗……</p>
 <h4 id="回归正题">回归正题</h4>
 <p>看到这道题目，相信大家就一定想到了一个初赛中经常遇到的模型：</p>
-<p>有 $ n $ 个完全相同的盒子和 $ n $个完全相同的小球，允许盒子为空，求有多少种不同的放法？</p>
+<p>有 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>n</mi></mrow><annotation encoding="application/x-tex">n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault">n</span></span></span></span> 个完全相同的盒子和 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>n</mi></mrow><annotation encoding="application/x-tex">n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault">n</span></span></span></span> 个完全相同的小球，允许盒子为空，求有多少种不同的放法？</p>
 <p>其实这道题本质上和上面的问题是完全相同的。</p>
 <p>初赛的时候数据小手推就可以了，但是现在<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>1</mn><mo>≤</mo><mi>n</mi><mo>≤</mo><mn>1</mn><msup><mn>0</mn><mn>5</mn></msup></mrow><annotation encoding="application/x-tex">1≤n≤10 
-^5</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.78041em;vertical-align:-0.13597em;"></span><span class="mord">1</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.7719400000000001em;vertical-align:-0.13597em;"></span><span class="mord mathdefault">n</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.8141079999999999em;vertical-align:0em;"></span><span class="mord">1</span><span class="mord"><span class="mord">0</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">5</span></span></span></span></span></span></span></span></span></span></span><br>
-，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>1</mn><mo>≤</mo><mi>p</mi><mo>&lt;</mo><msup><mn>2</mn><mn>30</mn></msup></mrow><annotation encoding="application/x-tex">1 \leq p &lt; 2^{30}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.78041em;vertical-align:-0.13597em;"></span><span class="mord">1</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.7335400000000001em;vertical-align:-0.19444em;"></span><span class="mord mathdefault">p</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">&lt;</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.8141079999999999em;vertical-align:0em;"></span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">3</span><span class="mord mtight">0</span></span></span></span></span></span></span></span></span></span></span></span>，显然<s>dabiao</s>是不现实的。</p>
+^5</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.78041em;vertical-align:-0.13597em;"></span><span class="mord">1</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.7719400000000001em;vertical-align:-0.13597em;"></span><span class="mord mathdefault">n</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.8141079999999999em;vertical-align:0em;"></span><span class="mord">1</span><span class="mord"><span class="mord">0</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">5</span></span></span></span></span></span></span></span></span></span></span> ，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>1</mn><mo>≤</mo><mi>p</mi><mo>&lt;</mo><msup><mn>2</mn><mn>30</mn></msup></mrow><annotation encoding="application/x-tex">1 \leq p &lt; 2^{30}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.78041em;vertical-align:-0.13597em;"></span><span class="mord">1</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.7335400000000001em;vertical-align:-0.19444em;"></span><span class="mord mathdefault">p</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">&lt;</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.8141079999999999em;vertical-align:0em;"></span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">3</span><span class="mord mtight">0</span></span></span></span></span></span></span></span></span></span></span></span>，显然<s>dabiao</s>是不现实的。</p>
 <p>那么应该如何解呢？</p>
 <h3 id="大家要注意的是这是一场online测试">大家要注意的是！这是一场Online测试。</h3>
 <h3 id="所以我们要充分地利用网络">所以，我们要充分地利用网络。</h3>
